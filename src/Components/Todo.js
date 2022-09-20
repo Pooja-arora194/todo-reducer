@@ -1,7 +1,8 @@
 import React, { useState, useEffect }from "react";
 import '../App.css';
 
-const Todo = () => {
+
+const Todo = () => {  
  
     const defaultValue = {
       name: ''
@@ -86,7 +87,9 @@ const Todo = () => {
           name:""
         } 
       })
+    
      getdata()
+    
     }
 }
     const getdata = async() =>{
@@ -108,8 +111,6 @@ const Todo = () => {
           setGetuserdata(alldata);
         }
     }
-
-    
       const isEdit = (element) =>{
         //console.log(element)
         setId(element._id)
@@ -126,11 +127,6 @@ const Todo = () => {
           }
         })
       }
-
-      // const deletedata = (element) =>{
-      //   console.log(element)
-      //   setId(element._id)
-      // }
      
     useEffect(() => {
       getdata();
@@ -152,9 +148,23 @@ const Todo = () => {
           alert("data deleted")
           getdata();           
         }
-    }   
+    }
 
-      
+    const handlecomplete = async(id) =>{
+
+      const res = await fetch(`handlecomplete/${id}`, {
+              method: "PUT",
+              headers:{
+                "Content-Type": "application/json"
+              }
+      });
+              const all = await res.json();
+              console.log(all);
+              getdata();    
+               
+    }
+
+          
   return (
     <div className="container-fluid pt-4 ">
        <div className="col-sm-6 mx-auto">
@@ -172,22 +182,19 @@ const Todo = () => {
                       return (
                         <>
                         <div className="row" >
-                   
                           <div className="col-sm-10 pt-2 list " >
-                          
-                             <p>{element.name}</p>
+                             <p style={{ textDecoration: element.status ? "line-through" : "" }}>{element.name}</p>
                           </div>
                           <div className="col-sm-2">
                            <i className="fa fa-edit btn-sm editbtn" onClick={() => isEdit(element)}></i>
                             <i className="fa fa-trash btn-sm deletebtn" onClick={ () => deletedata(element._id)}></i>
-                            <i className="fa fa-check-circle btn-sm completebtn"></i>
+                            <i className="fa fa-check-circle btn-sm completebtn" onClick={ () => handlecomplete(element._id)}></i>
                           </div>
                         </div>
                         </>
                       )
                     })
                   }
-
             </div>
           </div>
         </div>
